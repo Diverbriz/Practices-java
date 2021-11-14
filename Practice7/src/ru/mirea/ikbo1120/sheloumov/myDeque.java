@@ -5,40 +5,60 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 public class myDeque {
-    private static Deque<Integer> firstDeck = new ArrayDeque<>(),
-            secondDeck = new ArrayDeque<>();
+   private ArrayDeque<Integer> firstDeck, secondDeck;
 
-    myDeque(String[] first, String[] second){
-        for (int i = 0; i < 5; i++) {
-            firstDeck.add(Integer.parseInt(first[i]));
-            secondDeck.add(Integer.parseInt(second[i]));
-        }
-    }
-    public static String play(String[] first, String[] second) {
-        new myDeque(first, second);
-        for (int i = 0; i < 106; i++) {
-            if (firstDeck.size() == 0)
-                return "second "+i;
-            else if (secondDeck.size()== 0)
-                return "first "+i;
+    public Game(){
+        firstDeck = new ArrayDeque<Integer>();
+        secondDeck = new ArrayDeque<Integer>();
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Vvedite chisla dly 1 igroka");
+        for(int i = 0; i < 5; i++)
+            firstDeck.add(scanner.nextInt());
+        System.out.println("Vvedite chisla dly 2 igroka");
+        for(int i = 0; i < 5; i++)
+            secondDeck.add(scanner.nextInt());
+
+        System.out.println("Karti 1 igroka");
+        for(Integer deck : firstDeck)
+            System.out.print(" " + deck);
+        System.out.println("\nKarti 2 igroka");
+        for(Integer deck : secondDeck)
+            System.out.print(" " + deck);
+
+        System.out.println("\n");
+        int hod = 0;
+
+        while(true){
+            hod++;
+            Integer firstElement, secondElement;
+            firstElement = firstDeck.pollFirst();
+            secondElement = secondDeck.pollFirst();
+
+            if(firstElement == null || secondElement == null || hod == 106)
+                break;
+            if(secondElement == 0 && firstElement == 9){
+                secondDeck.addLast(firstElement);
+                secondDeck.addLast(secondElement);
+            }
+            else if(firstElement == 0 && secondElement == 9){
+                firstDeck.addLast(firstElement);
+                firstDeck.addLast(secondElement);
+            }
+            if(firstDeck.isEmpty() || secondDeck.isEmpty()|| hod==106)
+                break;
+            if(firstElement > secondElement) {
+                firstDeck.addLast(firstElement);
+                firstDeck.addLast(secondElement);
+            }
             else {
-                Integer a = firstDeck.remove();
-                Integer b = secondDeck.remove();
-                if (a == 0 && b == 9){
-                    firstDeck.add(a);
-                    firstDeck.add(b);
-                } else if (b == 0 && a == 9){
-                    secondDeck.add(a);
-                    secondDeck.add(b);
-                } else if(a > b){
-                    firstDeck.add(a);
-                    firstDeck.add(b);
-                } else {
-                    secondDeck.add(a);
-                    secondDeck.add(b);
-                }
+                secondDeck.addLast(firstElement);
+                secondDeck.addLast(secondElement);
             }
         }
-        return "lul";
+        String winner = (!firstDeck.isEmpty()) ? "First " : "Second ";
+        String out = (hod == 106) ? "botva" : winner + hod;
+        System.out.println("\n" + out);
     }
 }
